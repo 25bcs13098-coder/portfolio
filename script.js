@@ -1,129 +1,254 @@
+const loader=document.getElementById("loader");
+
+window.addEventListener("load",()=>{
+setTimeout(()=>{
+loader.classList.add("hide");
+},700);
+});
+
+
+const typingElement=document.getElementById("typing");
+
 const words=[
-"C++ Developer",
-"Software Developer",
-"AI Enthusiast",
-"Computer Vision Developer",
-"Problem Solver"
+"Developer",
+"C++ Programmer",
+"Problem Solver",
+"Web Developer",
+"Technology Explorer"
 ];
 
 let wordIndex=0;
 let charIndex=0;
 let deleting=false;
 
-const typing=document.getElementById("typing");
-
 function typeEffect(){
 
-const word=words[wordIndex];
+const currentWord=words[wordIndex];
 
 if(!deleting){
-typing.textContent=word.substring(0,charIndex+1);
+
+typingElement.textContent=currentWord.substring(0,charIndex+1);
 charIndex++;
 
-if(charIndex===word.length){
+if(charIndex===currentWord.length){
 deleting=true;
-setTimeout(typeEffect,1500);
+setTimeout(typeEffect,1300);
 return;
 }
 
 }else{
-typing.textContent=word.substring(0,charIndex-1);
+
+typingElement.textContent=currentWord.substring(0,charIndex-1);
 charIndex--;
 
 if(charIndex===0){
 deleting=false;
 wordIndex=(wordIndex+1)%words.length;
 }
+
 }
 
-setTimeout(typeEffect,deleting?50:90);
+setTimeout(typeEffect,deleting?55:90);
 }
 
 typeEffect();
 
 
-const reveals=document.querySelectorAll(".reveal");
+const menuBtn=document.getElementById("menuBtn");
+const mobileMenu=document.getElementById("mobileMenu");
 
-function revealOnScroll(){
+menuBtn.addEventListener("click",()=>{
+mobileMenu.classList.toggle("open");
+});
 
-reveals.forEach(element=>{
 
-const position=element.getBoundingClientRect().top;
+document.querySelectorAll(".mobile-menu a").forEach(link=>{
+link.addEventListener("click",()=>{
+mobileMenu.classList.remove("open");
+});
+});
 
-if(position<window.innerHeight-100){
-element.classList.add("active");
+
+const revealElements=document.querySelectorAll(".reveal");
+
+const revealObserver=new IntersectionObserver((entries)=>{
+entries.forEach(entry=>{
+if(entry.isIntersecting){
+entry.target.classList.add("active");
+revealObserver.unobserve(entry.target);
+}
+});
+},{
+threshold:.12
+});
+
+revealElements.forEach(element=>{
+revealObserver.observe(element);
+});
+
+
+const progress=document.getElementById("scrollProgress");
+
+window.addEventListener("scroll",()=>{
+
+const scrollTop=window.scrollY;
+const documentHeight=document.documentElement.scrollHeight-window.innerHeight;
+
+const percentage=(scrollTop/documentHeight)*100;
+
+progress.style.width=percentage+"%";
+
+});
+
+
+const contactForm=document.getElementById("contactForm");
+const submitBtn=document.getElementById("submitBtn");
+const buttonText=document.getElementById("buttonText");
+const buttonArrow=document.getElementById("buttonArrow");
+const formStatus=document.getElementById("formStatus");
+
+const successModal=document.getElementById("successModal");
+const closeModal=document.getElementById("closeModal");
+const modalDone=document.getElementById("modalDone");
+
+
+contactForm.addEventListener("submit",async(event)=>{
+
+event.preventDefault();
+
+const accessKey=contactForm.querySelector(
+'input[name="access_key"]'
+).value.trim();
+
+if(!accessKey || accessKey==="YOUR_WEB3FORMS_ACCESS_KEY"){
+
+formStatus.textContent="Please add your real Web3Forms Access Key first.";
+formStatus.className="form-status error";
+
+return;
+}
+
+
+submitBtn.classList.add("loading");
+buttonText.textContent="Sending...";
+buttonArrow.textContent="";
+
+
+formStatus.textContent="";
+formStatus.className="form-status";
+
+
+const formData=new FormData(contactForm);
+
+formData.append(
+"page_url",
+window.location.href
+);
+
+
+try{
+
+const response=await fetch(
+"https://api.web3forms.com/submit",
+{
+method:"POST",
+body:formData
+}
+);
+
+
+const data=await response.json();
+
+
+if(data.success){
+
+contactForm.reset();
+
+formStatus.textContent="";
+formStatus.className="form-status";
+
+successModal.classList.add("show");
+
+}else{
+
+formStatus.textContent=
+data.message ||
+"Something went wrong. Please try again.";
+
+formStatus.className="form-status error";
+
+}
+
+}catch(error){
+
+formStatus.textContent=
+"Unable to send message. Please check your internet connection.";
+
+formStatus.className="form-status error";
+
+}
+
+
+submitBtn.classList.remove("loading");
+buttonText.textContent="Send Message";
+buttonArrow.textContent="↗";
+
+});
+
+
+function closeSuccessModal(){
+successModal.classList.remove("show");
+}
+
+closeModal.addEventListener("click",closeSuccessModal);
+modalDone.addEventListener("click",closeSuccessModal);
+
+successModal.addEventListener("click",(event)=>{
+
+if(event.target===successModal){
+closeSuccessModal();
 }
 
 });
 
+
+document.addEventListener("keydown",(event)=>{
+
+if(event.key==="Escape"){
+closeSuccessModal();
 }
 
-window.addEventListener("scroll",revealOnScroll);
-
-revealOnScroll();
-
-
-const cursor=document.querySelector(".cursor");
-const ring=document.querySelector(".cursor-ring");
-
-let mouseX=0;
-let mouseY=0;
-let ringX=0;
-let ringY=0;
-
-document.addEventListener("mousemove",e=>{
-
-mouseX=e.clientX;
-mouseY=e.clientY;
-
-cursor.style.left=mouseX+"px";
-cursor.style.top=mouseY+"px";
-
-});
-
-function animateCursor(){
-
-ringX+=(mouseX-ringX)*0.15;
-ringY+=(mouseY-ringY)*0.15;
-
-ring.style.left=ringX+"px";
-ring.style.top=ringY+"px";
-
-requestAnimationFrame(animateCursor);
-
-}
-
-animateCursor();
-
-
-document.querySelectorAll("a").forEach(link=>{
-
-link.addEventListener("mouseenter",()=>{
-
-ring.style.width="55px";
-ring.style.height="55px";
-
-});
-
-link.addEventListener("mouseleave",()=>{
-
-ring.style.width="35px";
-ring.style.height="35px";
-
-});
-
 });
 
 
+document.getElementById("year").textContent=
+new Date().getFullYear();
+
+
+const sections=document.querySelectorAll("section[id]");
 const navLinks=document.querySelectorAll(".nav-links a");
+
+window.addEventListener("scroll",()=>{
+
+let current="";
+
+sections.forEach(section=>{
+
+const sectionTop=section.offsetTop-150;
+
+if(window.scrollY>=sectionTop){
+current=section.getAttribute("id");
+}
+
+});
 
 navLinks.forEach(link=>{
 
-link.addEventListener("click",()=>{
+link.classList.remove("active");
 
-navLinks.forEach(item=>item.classList.remove("active"));
-
+if(link.getAttribute("href")==="#"+current){
 link.classList.add("active");
+}
 
 });
 
