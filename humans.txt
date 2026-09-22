@@ -1,0 +1,41 @@
+/* TEAM */
+
+Developer: Sunny Kumar Chaurasiya
+Role: Computer Science Student & Developer
+University: Chandigarh University
+Location: India
+GitHub: https://github.com/25bcs13098-coder
+LinkedIn: https://www.linkedin.com/in/sunny-kumar-2938153a5/
+Instagram: https://www.instagram.com/_sunnychaurasiya/?hl=en
+
+
+/* SITE */
+
+Name: Sunny Kumar Chaurasiya | Developer Portfolio
+URL: https://sunnychaurasiya.vercel.app/
+Description: Personal portfolio showcasing projects, skills, education, certificates and development work.
+Language: English
+Doctype: HTML5
+Standards: HTML5, CSS3, JavaScript
+
+
+/* TECHNOLOGY */
+
+Frontend: HTML, CSS, JavaScript
+Programming: C++, Java
+Database: MySQL
+Version Control: Git
+Computer Vision: OpenCV
+Deployment: Vercel
+
+
+/* PROJECTS */
+
+RASTA-SENSE: Adaptive path planning and collision avoidance for Indian road environments.
+FYLO: Digital platform concept for reconnecting missing persons with families and organizations.
+Hospital Management: Hospital management interface for patients, doctors and administrative workflows.
+
+
+/* CONTACT */
+
+Website: https://sunnychaurasiya.vercel.app/
